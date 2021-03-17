@@ -1,7 +1,5 @@
 package it.jac.project.dto;
 
-import javax.persistence.Column;
-
 import lombok.Data;
 
 @Data
