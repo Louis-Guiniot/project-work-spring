@@ -33,5 +33,8 @@ public class Utente {
 	
 	@Column(name = "genere")
 	private String genere;
+	
+	@Column(name = "data_nascita")
+	private String dataNascita;
 
 }
