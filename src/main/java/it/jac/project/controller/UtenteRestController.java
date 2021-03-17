@@ -74,8 +74,7 @@ public class UtenteRestController {
 
 		log.info("Richiesta delete utente con id: ",id);
 		
-		return null;
-//		return utenteService.deleteUtenteById(id);
+		return utenteService.deleteUtenteById(id);
 	}
 	
 }
