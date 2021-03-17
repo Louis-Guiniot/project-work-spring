@@ -31,6 +31,9 @@ public class Torneo {
 	@Column(name = "capienza")
 	private int capienza;
 	
+	@Column(name = "capienza_minima")
+	private int capienzaMinima;
+	
 	@Column(name = "iscrizioni")
 	private int iscrizioni;
 	

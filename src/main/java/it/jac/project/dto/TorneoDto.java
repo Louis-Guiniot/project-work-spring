@@ -10,6 +10,7 @@ public class TorneoDto {
 	private String gioco;
 	private String piattaforma;
 	private int capienza;
+	private int capienzaMinima;
 	private int iscrizioni;
 	private int postiLiberi;
 	private int partite;
