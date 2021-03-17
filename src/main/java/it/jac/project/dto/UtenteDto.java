@@ -12,6 +12,7 @@ public class UtenteDto {
 	private String nome;
 	private String cognome;
 	private String username;
+	private String email;
 	private String password;
 	private String genere;
 	private String dataNascita;
