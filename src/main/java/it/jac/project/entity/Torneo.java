@@ -55,4 +55,10 @@ public class Torneo {
 	@Column(name = "premio_terzo")
 	private String premioTerzo;
 	
+	@Column(name = "id_creatore")
+	private int idCreatore;
+	
+	@Column(name = "stato")
+	private String stato;
+	
 }
