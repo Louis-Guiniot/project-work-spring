@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import it.jac.project.dto.ResponseDto;
 import it.jac.project.dto.TorneoDto;
+import it.jac.project.dto.UtenteDto;
 import it.jac.project.entity.Torneo;
+import it.jac.project.entity.Utente;
 import it.jac.project.repository.TorneoRepository;
 
 @Service
@@ -51,7 +53,7 @@ public class TorneoService {
 			response.setError("Torneo non creato, nome già presente");
 
 		}
-
+		
 		return response;
 
 	}
@@ -103,7 +105,38 @@ public class TorneoService {
 			response.setError("Nessun torneo trovato.");
 
 		}
+		
+		return response;
 
+	}
+	
+	public ResponseDto<List<TorneoDto>> findAllTorneiByIdCreatore(int idCreatore) {
+
+		ResponseDto<List<TorneoDto>> response = new ResponseDto<List<TorneoDto>>();
+
+		List<TorneoDto> result = new ArrayList<>();
+
+		try {
+
+			Iterator<Torneo> iterator = torneoRepository.findAllByIdCreatore(idCreatore).iterator();
+
+			while (iterator.hasNext()) {
+
+				Torneo torneo = iterator.next();
+				result.add(TorneoDto.build(torneo));
+
+			}
+
+			response.setResult(result);
+			response.setResultTest(true);
+			
+
+		} catch (Exception e) {
+
+			response.setError("Nessun torneo trovato.");
+
+		}
+		
 		return response;
 
 	}
@@ -226,6 +259,36 @@ public class TorneoService {
 		return response;
 
 	}
+	
+	public ResponseDto<List<TorneoDto>> findTorneoByStato(String stato) {
+
+		ResponseDto<List<TorneoDto>> response = new ResponseDto<List<TorneoDto>>();
+
+		List<TorneoDto> result = new ArrayList<>();
+
+		try {
+
+			Iterator<Torneo> iterator = this.torneoRepository.findAllByStato(stato).iterator();
+
+			while (iterator.hasNext()) {
+
+				Torneo torneo = iterator.next();
+				result.add(TorneoDto.build(torneo));
+
+			}
+
+			response.setResult(result);
+			response.setResultTest(true);
+
+		} catch (Exception e) {
+
+			response.setError("Nessun torneo trovato.");
+
+		}
+
+		return response;
+
+	}
 
 	public ResponseDto<TorneoDto> updateTorneoById(int id, Torneo torneoPassato) {
 
@@ -275,7 +338,10 @@ public class TorneoService {
 
 				if (torneoPassato.getPremioTerzo() != "")
 					torneo.setPremioTerzo(torneoPassato.getPremioTerzo());
-
+				
+				if(torneoPassato.getStato() != "")
+					torneo.setStato(torneoPassato.getStato());
+				
 				this.torneoRepository.save(torneo);
 
 				response.setResult(TorneoDto.build(torneo));
