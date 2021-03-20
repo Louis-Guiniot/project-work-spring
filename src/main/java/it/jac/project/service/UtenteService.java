@@ -179,19 +179,20 @@ public class UtenteService {
 					utente.setNome(utentePassato.getNome());
 
 				if (utentePassato.getCognome() != "")
-					utente.setNome(utentePassato.getCognome());
+					utente.setCognome(utentePassato.getCognome());
 
 				if (utentePassato.getUsername() != "")
-					utente.setNome(utentePassato.getUsername());
+					utente.setUsername(utentePassato.getUsername());
+				
+				if (utentePassato.getPassword() != "")
+					utente.setPassword(utentePassato.getPassword());
 
 				if (utentePassato.getEmail() != "")
-					utente.setNome(utentePassato.getEmail());
+					utente.setEmail(utentePassato.getEmail());
 
-				if (utentePassato.getDataNascita() != "")
-					utente.setNome(utentePassato.getDataNascita());
+				if (utentePassato.getDatanascita() != "")
+					utente.setDatanascita(utentePassato.getDatanascita());
 
-				if (utentePassato.getGenere() != "")
-					utente.setNome(utentePassato.getGenere());
 
 				this.utenteRepository.save(utente);
 
