@@ -43,7 +43,7 @@ public class UtenteRestController {
 		log.info("password "+utente.getPassword());
 		log.info("nome "+utente.getNome());
 		log.info("cognome "+utente.getCognome());
-		log.info("data nascita "+utente.getDataNascita());
+		log.info("data nascita "+utente.getDatanascita());
 		log.info("genere "+utente.getGenere());
 		log.info("email "+utente.getEmail());
 
@@ -60,8 +60,7 @@ public class UtenteRestController {
 		log.info("password "+utente.getPassword());
 		log.info("nome "+utente.getNome());
 		log.info("cognome "+utente.getCognome());
-		log.info("data nascita "+utente.getDataNascita());
-		log.info("genere "+utente.getGenere());
+		log.info("data nascita "+utente.getDatanascita());
 		log.info("email "+utente.getEmail());
 		
 		int idDapassare = utente.getId();
@@ -77,4 +76,18 @@ public class UtenteRestController {
 		return utenteService.deleteUtenteById(id);
 	}
 	
+	
+	@PostMapping("/findUtente")
+	public ResponseDto<?> findByUsernameAndPassword(@RequestBody Utente utente){
+		
+		log.info("Richiesta di login utente");
+		log.info("informaizoni --------------");
+		
+		log.info("username "+utente.getUsername());
+		log.info("password "+utente.getPassword());
+		
+		
+		return utenteService.findUtenteByUsernameAndPassword(utente.getUsername(), utente.getPassword());
+		
+	}
 }
