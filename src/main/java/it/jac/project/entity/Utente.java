@@ -38,6 +38,6 @@ public class Utente {
 	private String genere;
 	
 	@Column(name = "data_nascita")
-	private String dataNascita;
+	private String datanascita;
 
 }

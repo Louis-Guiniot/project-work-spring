@@ -15,7 +15,7 @@ public class UtenteDto {
 	private String email;
 	private String password;
 	private String genere;
-	private String dataNascita;
+	private String datanascita;
 	
 	public static UtenteDto build(Utente utente) {
 
