@@ -31,6 +31,8 @@ public class AppConfiguration extends WebSecurityConfigurerAdapter implements We
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/rest/utente/**").allowedMethods("GET", "POST");
 		registry.addMapping("/rest/torneo/**").allowedMethods("GET", "POST");
+		registry.addMapping("/rest/mieitornei/**").allowedMethods("GET", "POST");
+
 	}
 
 	@Bean
