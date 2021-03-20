@@ -1,5 +1,7 @@
 package it.jac.project.controller;
 
+import java.util.Random;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +34,23 @@ private static Logger log = LoggerFactory.getLogger(TorneoRestController.class);
 		return torneoService.findAllTornei();
 	}
 
-	@GetMapping(path = "/elencoTornei/{gioco}")
+//	@GetMapping(path = "/elencoTorneiC/{idCreatore}")
+//	public ResponseDto<?> findAllTorneiByIdCreatore(@PathVariable ("idCreatore") String idInArrivo) {
+//
+//		
+//		if(idInArrivo != null) {
+//			int id = Integer.parseInt(idInArrivo);
+//			log.info("Richiesta della lista di tutti i tornei per id creatore: "+id);
+//
+//			return torneoService.findAllTorneiByIdCreatore(id);
+//		}
+//		
+//		return null;
+//		
+//	}
+
+	
+	@GetMapping(path = "/elencoTorneiG/{gioco}")
 	public ResponseDto<?> findAllTorneiByGioco(@PathVariable String gioco) {
 
 		log.info("Richiesta della lista di tutti i tornei gioco : ",gioco);
@@ -40,7 +58,7 @@ private static Logger log = LoggerFactory.getLogger(TorneoRestController.class);
 		return torneoService.findTorneoByGame(gioco);
 	}
 	
-	@GetMapping(path = "/elencoTornei/{piattaforma}")
+	@GetMapping(path = "/elencoTorneiP/{piattaforma}")
 	public ResponseDto<?> findAllTorneiByPiattaforma(@PathVariable String piattaforma) {
 
 		log.info("Richiesta della lista di tutti i tornei per piattaforma : ",piattaforma);
@@ -48,7 +66,7 @@ private static Logger log = LoggerFactory.getLogger(TorneoRestController.class);
 		return torneoService.findTorneoByPlatform(piattaforma);
 	}
 	
-	@GetMapping(path = "/elencoTornei/{postiLiberi}")
+	@GetMapping(path = "/elencoTorneiPL/{postiLiberi}")
 	public ResponseDto<?> findAllTorneiByPostiLiberi(@PathVariable int postiLiberi) {
 
 		log.info("Richiesta della lista di tutti i tornei per posti liberi : ",postiLiberi);
@@ -66,14 +84,27 @@ private static Logger log = LoggerFactory.getLogger(TorneoRestController.class);
 		log.info("gioco "+torneo.getGioco());
 		log.info("piattaforma "+torneo.getPiattaforma());
 		log.info("capienza "+torneo.getCapienza());
-		log.info("capienza minima"+torneo.getCapienzaMinima());
-		log.info("posti disponibili"+torneo.getPostiLiberi());
-		log.info("iscrizioni"+torneo.getIscrizioni());
-		log.info("partite"+torneo.getPartite());
+		log.info("capienza minima "+torneo.getCapienzaMinima());
+		
+		//iscrizioni generate randomicamente
+		int iscrizioniRandom = (int) (Math.random() * (torneo.getCapienza() - torneo.getCapienzaMinima() + 1));
+		log.info("iscrizioni generate "+iscrizioniRandom);
+		torneo.setIscrizioni(iscrizioniRandom);
+		
+		//posti liberi calcolati con capienza - iscrizioni
+		int postiLiberi = torneo.getCapienza() - iscrizioniRandom;
+		log.info("posti liberi "+postiLiberi);
+		torneo.setPostiLiberi(postiLiberi);
+		
+		log.info("partite "+torneo.getPartite());
 		log.info("quota"+torneo.getQuota());
-		log.info("iscrizioni"+torneo.getPremioPrimo());
-		log.info("iscrizioni"+torneo.getPremioSecondo());
-		log.info("iscrizioni"+torneo.getPremioTerzo());
+		log.info("premio primo "+torneo.getPremioPrimo());
+		log.info("premio secondo "+torneo.getPremioSecondo());
+		log.info("premio terzo "+torneo.getPremioTerzo());
+		log.info("id creatore "+torneo.getIdCreatore());
+		log.info("stato "+torneo.getStato());
+
+		
 
 		return torneoService.createTorneo(torneo);
 	}
@@ -93,18 +124,21 @@ private static Logger log = LoggerFactory.getLogger(TorneoRestController.class);
 		log.info("iscrizioni"+torneo.getIscrizioni());
 		log.info("partite"+torneo.getPartite());
 		log.info("quota"+torneo.getQuota());
-		log.info("iscrizioni"+torneo.getPremioPrimo());
-		log.info("iscrizioni"+torneo.getPremioSecondo());
-		log.info("iscrizioni"+torneo.getPremioTerzo());
+		log.info("1^"+torneo.getPremioPrimo());
+		log.info("2^"+torneo.getPremioSecondo());
+		log.info("3^"+torneo.getPremioTerzo());
+		log.info("stato"+torneo.getStato());
 		
 		int idDapassare = torneo.getId();
 
 		return torneoService.updateTorneoById(idDapassare,torneo);
 	}
 	
-	@DeleteMapping(path = "/deleteTorneo/{id}")
-	public ResponseDto<?> deleteTorneoById(@PathVariable int id) {
+	@PostMapping(path = "/eliminaTorneo")
+	public ResponseDto<?> deleteTorneoById(@RequestBody Torneo torneo) {
 
+		int id = torneo.getId();
+		
 		log.info("Richiesta delete torneo con id: ",id);
 
 		return torneoService.deleteTorneoById(id);
