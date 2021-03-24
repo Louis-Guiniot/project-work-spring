@@ -34,21 +34,6 @@ private static Logger log = LoggerFactory.getLogger(TorneoRestController.class);
 		return torneoService.findAllTornei();
 	}
 
-//	@GetMapping(path = "/elencoTorneiC/{idCreatore}")
-//	public ResponseDto<?> findAllTorneiByIdCreatore(@PathVariable ("idCreatore") String idInArrivo) {
-//
-//		
-//		if(idInArrivo != null) {
-//			int id = Integer.parseInt(idInArrivo);
-//			log.info("Richiesta della lista di tutti i tornei per id creatore: "+id);
-//
-//			return torneoService.findAllTorneiByIdCreatore(id);
-//		}
-//		
-//		return null;
-//		
-//	}
-
 	
 	@GetMapping(path = "/elencoTorneiG/{gioco}")
 	public ResponseDto<?> findAllTorneiByGioco(@PathVariable String gioco) {
