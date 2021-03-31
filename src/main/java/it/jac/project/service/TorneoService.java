@@ -110,37 +110,6 @@ public class TorneoService {
 
 	}
 	
-	public ResponseDto<List<TorneoDto>> findAllTorneiByIdCreatore(int idCreatore) {
-
-		ResponseDto<List<TorneoDto>> response = new ResponseDto<List<TorneoDto>>();
-
-		List<TorneoDto> result = new ArrayList<>();
-
-		try {
-
-			Iterator<Torneo> iterator = torneoRepository.findAllByIdCreatore(idCreatore).iterator();
-
-			while (iterator.hasNext()) {
-
-				Torneo torneo = iterator.next();
-				result.add(TorneoDto.build(torneo));
-
-			}
-
-			response.setResult(result);
-			response.setResultTest(true);
-			
-
-		} catch (Exception e) {
-
-			response.setError("Nessun torneo trovato.");
-
-		}
-		
-		return response;
-
-	}
-
 	public ResponseDto<TorneoDto> findTorneoById(int id) {
 
 		ResponseDto<TorneoDto> response = new ResponseDto<TorneoDto>();
@@ -216,7 +185,6 @@ public class TorneoService {
 				
 				if(torneo.getIdCreatore() != id) {
 					result.add(TorneoDto.build(torneo));
-					log.info("torneo :" +torneo.toString());
 				}
 
 

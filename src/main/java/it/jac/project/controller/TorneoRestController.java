@@ -43,47 +43,6 @@ private static Logger log = LoggerFactory.getLogger(TorneoRestController.class);
 	}
 
 	
-//	@PostMapping(path = "/elencoTorneiG")
-//	public ResponseDto<?> findAllTorneiByGioco(@RequestBody Torneo torneo) {
-//		
-//		String gioco = torneo.getGioco();
-//
-//		log.info("Richiesta della lista di tutti i tornei gioco : ",gioco);
-//
-//		return torneoService.findTorneoByGame(gioco);
-//	}
-	
-//	@PostMapping(path = "/elencoTorneiP")
-//	public ResponseDto<?> findAllTorneiByPiattaforma(@RequestBody Torneo torneo) {
-//
-//		String piattaforma = torneo.getPiattaforma();
-//		
-//		log.info("Richiesta della lista di tutti i tornei per piattaforma : ",piattaforma);
-//
-//		return torneoService.findTorneoByPlatform(piattaforma);
-//	}
-	
-	@PostMapping(path = "/elencoTorneiExcept")
-	public ResponseDto<?> findAllTorneiExcept(@RequestBody Torneo torneo) {
-
-		int idCreatore = torneo.getIdCreatore();
-		
-		log.info("Richiesta della lista di tutti i tornei meno quelli creati da user : " + idCreatore);
-
-		return torneoService.findTorneoExceptId(idCreatore);
-	}
-	
-//	@GetMapping(path = "/elencoTorneiPL")
-//	public ResponseDto<?> findAllTorneiByPostiLiberi(@RequestBody Torneo torneo) {
-//
-//		
-//		int postiLiberi = torneo.getPostiLiberi();
-//		
-//		log.info("Richiesta della lista di tutti i tornei per posti liberi : ",postiLiberi);
-//
-//		return torneoService.findTorneoByPostiLiberi(postiLiberi);
-//	}
-	
 	@PostMapping("/creaTorneo")
 	public ResponseDto<?> createTorneo(@RequestBody Torneo torneo){
 
