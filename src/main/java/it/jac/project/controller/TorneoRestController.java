@@ -2,9 +2,11 @@ package it.jac.project.controller;
 
 import java.util.Random;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,7 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import it.jac.project.dto.ResponseDto;
+import it.jac.project.entity.Iscrizione;
 import it.jac.project.entity.Torneo;
+import it.jac.project.entity.Utente;
+import it.jac.project.service.IscrizioneService;
 import it.jac.project.service.TorneoService;
 
 @RestController
@@ -26,6 +31,9 @@ private static Logger log = LoggerFactory.getLogger(TorneoRestController.class);
 	@Autowired
 	TorneoService torneoService;
 	
+	@Autowired
+	IscrizioneService iscrizioneService;
+	
 	@GetMapping(path = "/elencoTornei")
 	public ResponseDto<?> findAllTornei() {
 
@@ -35,29 +43,46 @@ private static Logger log = LoggerFactory.getLogger(TorneoRestController.class);
 	}
 
 	
-	@GetMapping(path = "/elencoTorneiG/{gioco}")
-	public ResponseDto<?> findAllTorneiByGioco(@PathVariable String gioco) {
+//	@PostMapping(path = "/elencoTorneiG")
+//	public ResponseDto<?> findAllTorneiByGioco(@RequestBody Torneo torneo) {
+//		
+//		String gioco = torneo.getGioco();
+//
+//		log.info("Richiesta della lista di tutti i tornei gioco : ",gioco);
+//
+//		return torneoService.findTorneoByGame(gioco);
+//	}
+	
+//	@PostMapping(path = "/elencoTorneiP")
+//	public ResponseDto<?> findAllTorneiByPiattaforma(@RequestBody Torneo torneo) {
+//
+//		String piattaforma = torneo.getPiattaforma();
+//		
+//		log.info("Richiesta della lista di tutti i tornei per piattaforma : ",piattaforma);
+//
+//		return torneoService.findTorneoByPlatform(piattaforma);
+//	}
+	
+	@PostMapping(path = "/elencoTorneiExcept")
+	public ResponseDto<?> findAllTorneiExcept(@RequestBody Torneo torneo) {
 
-		log.info("Richiesta della lista di tutti i tornei gioco : ",gioco);
+		int idCreatore = torneo.getIdCreatore();
+		
+		log.info("Richiesta della lista di tutti i tornei meno quelli creati da user : " + idCreatore);
 
-		return torneoService.findTorneoByGame(gioco);
+		return torneoService.findTorneoExceptId(idCreatore);
 	}
 	
-	@GetMapping(path = "/elencoTorneiP/{piattaforma}")
-	public ResponseDto<?> findAllTorneiByPiattaforma(@PathVariable String piattaforma) {
-
-		log.info("Richiesta della lista di tutti i tornei per piattaforma : ",piattaforma);
-
-		return torneoService.findTorneoByPlatform(piattaforma);
-	}
-	
-	@GetMapping(path = "/elencoTorneiPL/{postiLiberi}")
-	public ResponseDto<?> findAllTorneiByPostiLiberi(@PathVariable int postiLiberi) {
-
-		log.info("Richiesta della lista di tutti i tornei per posti liberi : ",postiLiberi);
-
-		return torneoService.findTorneoByPostiLiberi(postiLiberi);
-	}
+//	@GetMapping(path = "/elencoTorneiPL")
+//	public ResponseDto<?> findAllTorneiByPostiLiberi(@RequestBody Torneo torneo) {
+//
+//		
+//		int postiLiberi = torneo.getPostiLiberi();
+//		
+//		log.info("Richiesta della lista di tutti i tornei per posti liberi : ",postiLiberi);
+//
+//		return torneoService.findTorneoByPostiLiberi(postiLiberi);
+//	}
 	
 	@PostMapping("/creaTorneo")
 	public ResponseDto<?> createTorneo(@RequestBody Torneo torneo){
@@ -127,6 +152,23 @@ private static Logger log = LoggerFactory.getLogger(TorneoRestController.class);
 		log.info("Richiesta delete torneo con id: ",id);
 
 		return torneoService.deleteTorneoById(id);
+	}
+	
+	@PostMapping(path = "/iscriviti")
+	public ResponseDto<?> iscrivitiAlTorneo(@RequestBody Iscrizione iscrizione){
+		
+		log.info("ricevuta richiesta iscrizione");
+		log.info("nuove informaizoni ----------   ");
+
+		
+		log.info("utente " + iscrizione.getIdUtente());
+		log.info("torneo " + iscrizione.getIdTorneo());
+
+		
+		int idUtente = iscrizione.getIdUtente();
+		int idTorneo = iscrizione.getIdTorneo();
+		
+		return iscrizioneService.iscriviti(idTorneo,idUtente);
 	}
 
 }

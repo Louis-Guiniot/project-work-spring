@@ -200,7 +200,7 @@ public class TorneoService {
 
 	}
 	
-	public ResponseDto<List<TorneoDto>> findTorneoByPlatform(String platform) {
+	public ResponseDto<List<TorneoDto>> findTorneoExceptId(int id) {
 
 		ResponseDto<List<TorneoDto>> response = new ResponseDto<List<TorneoDto>>();
 
@@ -208,12 +208,17 @@ public class TorneoService {
 
 		try {
 
-			Iterator<Torneo> iterator = this.torneoRepository.findAllByPiattaforma(platform).iterator();
+			Iterator<Torneo> iterator = this.torneoRepository.findAll().iterator();
 
 			while (iterator.hasNext()) {
 
 				Torneo torneo = iterator.next();
-				result.add(TorneoDto.build(torneo));
+				
+				if(torneo.getIdCreatore() != id) {
+					result.add(TorneoDto.build(torneo));
+					log.info("torneo :" +torneo.toString());
+				}
+
 
 			}
 

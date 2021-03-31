@@ -153,6 +153,9 @@ public class UtenteService {
 				response.setResult(UtenteDto.build(utente));
 				response.setResultTest(true);
 
+			}else {
+				
+				log.info("utente non trovato.");
 			}
 
 		} catch (Exception e) {
