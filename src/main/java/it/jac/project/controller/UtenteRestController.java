@@ -37,15 +37,15 @@ public class UtenteRestController {
 	public ResponseDto<?> createUtente(@RequestBody Utente utente){
 
 		log.info("Richiesta di creazione nuovo utente");
-		log.info("informaizoni passate --------------");
+		log.info("informazioni passate --------------");
 
-		log.info("username "+utente.getUsername());
-		log.info("password "+utente.getPassword());
 		log.info("nome "+utente.getNome());
 		log.info("cognome "+utente.getCognome());
-		log.info("data nascita "+utente.getDatanascita());
-		log.info("genere "+utente.getGenere());
+		log.info("username "+utente.getUsername());
+		log.info("password "+utente.getPassword());
 		log.info("email "+utente.getEmail());
+		log.info("genere "+utente.getGenere());
+		log.info("data nascita "+utente.getDatanascita());
 
 		return utenteService.createUtente(utente);
 	}
@@ -54,7 +54,7 @@ public class UtenteRestController {
 	public ResponseDto<?> aggiornaUtente(@RequestBody Utente utente){
 
 		log.info("Richiesta di aggiornamento utente");
-		log.info("nuove informaizoni --------------");
+		log.info("nuove informazioni --------------");
 		
 		log.info("username "+utente.getUsername());
 		log.info("password "+utente.getPassword());

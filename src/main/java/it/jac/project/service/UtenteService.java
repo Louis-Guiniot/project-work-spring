@@ -31,12 +31,17 @@ public class UtenteService {
 		try {
 
 			Iterator<Utente> iterator = this.utenteRepository.findAll().iterator();
+			
+			String emailDaComparare = utente.getEmail();
+			String usernameDaComparare = utente.getUsername();
+
 
 			while (iterator.hasNext()) {
 
 				Utente u = iterator.next();
-				if (u.getEmail().equals(utente.getEmail()) || u.getUsername().equals(utente.getUsername())) {
+				if (  (u.getEmail().equals(emailDaComparare))|| (u.getUsername().equals(usernameDaComparare)) ) {
 					found = true;
+					log.info("utente già presente con tali informazioni");
 				}
 
 			}
