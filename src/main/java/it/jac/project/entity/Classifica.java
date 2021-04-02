@@ -31,6 +31,9 @@ public class Classifica {
 		
 		@Column(name = "punteggio")
 		private int punteggio;
+		
+		@Column(name = "posizione")
+		private int posizione;
 
 
 }

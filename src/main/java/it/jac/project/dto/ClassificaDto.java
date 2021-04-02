@@ -3,7 +3,6 @@ package it.jac.project.dto;
 import org.springframework.beans.BeanUtils;
 
 import it.jac.project.entity.Classifica;
-import it.jac.project.entity.Iscrizione;
 import lombok.Data;
 
 @Data
@@ -14,6 +13,7 @@ public class ClassificaDto {
 	int idTorneo;
 	int idUtente;
 	int punteggio;
+	int posizione;
 	
 	public static ClassificaDto build(Classifica iscrizione) {
 
