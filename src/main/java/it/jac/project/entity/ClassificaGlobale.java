@@ -14,6 +14,7 @@ import lombok.Data;
 @Table (name = "classifica_globale")
 public class ClassificaGlobale {
 	
+	
 	@Id
 	@Column(name = "id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +23,7 @@ public class ClassificaGlobale {
 	@Column(name = "idPlayer")
 	private int idPlayer;
 	
-	@Column(name = "torneo_giocati")
+	@Column(name = "tornei_giocati")
 	private int torneiGiocati;
 	
 	@Column(name = "partite_giocate")
@@ -31,13 +32,13 @@ public class ClassificaGlobale {
 	@Column(name = "punteggio_totale")
 	private int punteggioTotale;
 	
-	@Column(name = "punteggio_totale")
+	@Column(name = "media_punteggio_tornei")
 	private double mediaPunteggio;
 	
 	@Column(name = "vittorie")
 	private int vittorie;
 	
-	@Column(name = "media_podio")
+	@Column(name = "media_podio_tornei")
 	private double mediaPodio;
 	
 

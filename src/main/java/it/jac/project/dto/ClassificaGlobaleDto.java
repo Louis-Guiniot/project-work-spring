@@ -2,7 +2,9 @@ package it.jac.project.dto;
 
 import org.springframework.beans.BeanUtils;
 import it.jac.project.entity.ClassificaGlobale;
+import lombok.Data;
 
+@Data
 public class ClassificaGlobaleDto {
 	
 	int id;
