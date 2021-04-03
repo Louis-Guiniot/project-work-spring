@@ -8,4 +8,7 @@ import it.jac.project.entity.ClassificaGlobale;
 @Repository
 public interface ClassificaGlobaleRepository extends CrudRepository<ClassificaGlobale, Integer>{
 
+	ClassificaGlobale findByIdPlayer(int idPlayer);
+	
+	
 }
