@@ -39,10 +39,10 @@ public class ClassificaService {
 
 			while (iterator.hasNext()) {
 
-				Classifica torneo = iterator.next();
+				Classifica classifica = iterator.next();
 				
-				if(torneo.getIdIscrizione() == iscrizioneService.findLastIscrizione().getResult().getId()) {
-					result.add(ClassificaDto.build(torneo));
+				if(classifica.getIdIscrizione() == iscrizioneService.findLastIscrizione().getResult().getId()) {
+					result.add(ClassificaDto.build(classifica));
 
 				}
 			
@@ -53,7 +53,7 @@ public class ClassificaService {
 
 		} catch (Exception e) {
 
-			response.setError("Nessuna iscrizione trovata.");
+			response.setError("Nessuna classifica trovata.");
 
 		}
 		
