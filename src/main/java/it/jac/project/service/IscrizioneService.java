@@ -13,8 +13,10 @@ import it.jac.project.dto.IscrizioneDto;
 import it.jac.project.dto.PartecipanteDto;
 import it.jac.project.dto.ResponseDto;
 import it.jac.project.entity.Classifica;
+import it.jac.project.entity.ClassificaGlobale;
 import it.jac.project.entity.Iscrizione;
 import it.jac.project.entity.Torneo;
+import it.jac.project.repository.ClassificaGlobaleRepository;
 import it.jac.project.repository.ClassificaRepository;
 import it.jac.project.repository.IscrizioneRepository;
 import it.jac.project.repository.TorneoRepository;
@@ -34,12 +36,16 @@ public class IscrizioneService {
 	ClassificaRepository classificaRepository;
 
 	@Autowired
+	ClassificaGlobaleRepository classificaGlobaleRepository;
+
+	@Autowired
 	TorneoService torneoService;
-	
+
 	public ResponseDto<?> iscriviti(int idTorneo, int idUtente) {
 
 		ResponseDto<Boolean> response = new ResponseDto<Boolean>();
 
+		// genero una nuova iscrizione
 		Iscrizione iscrizione = new Iscrizione();
 		iscrizione.setIdTorneo(idTorneo);
 		iscrizione.setIdUtente(idUtente);
@@ -65,6 +71,9 @@ public class IscrizioneService {
 			int p = (int) (Math.random() * (10 - 0)); // genero numero casuale tra 0 e 10
 			punteggioUtente += p;
 		}
+
+		// salvo in iscrizione il mio punteggio
+		iscrizione.setPunteggio(punteggioUtente);
 
 		me.setIdPartecipante(0); // setto 0 come id per ricordarmi quale è il mio / uso anche amI true
 		me.setPunteggioPartecipante(punteggioUtente);
@@ -111,10 +120,32 @@ public class IscrizioneService {
 			}
 		}
 
+		int posizione = 1;
+		int podioUtente = 0;
+		int posizioneUtente = 0;
+		
 		// mostro in console la lista ordinata
-		log.info("----------------------- \n\n");
+		log.info("ORDINATA PER PUNTEGGIO ----------------------- \n\n");
+
+		log.info("giocatori totali..." + lista.size());
+
 		for (PartecipanteDto p : lista) {
+
+			// se id partecipante = 0 salvo posizione
+			if (p.getIdPartecipante() == 0) {
+				iscrizione.setPosizione(posizione);
+				
+				posizioneUtente = posizione;
+			
+				// aggiungo vittoria se podio
+				if (posizione == 1 || posizione == 2 || posizione == 3) {
+					podioUtente = 1;
+				}
+			}
+
 			log.info(p.toString());
+			posizione++;
+
 		}
 
 		// aggiorno iscrizioni torneo + posti liberi
@@ -123,7 +154,7 @@ public class IscrizioneService {
 		// salvo iscrizione con id utente e torneo
 		this.iscrizioneRepository.save(iscrizione);
 
-		// per ogni utente in lista creo record in classifica con informazioni : 
+		// per ogni utente in lista creo record in classifica con informazioni :
 		// ID: iscrizione , ID torneo, ID utente, Punteggio
 		for (PartecipanteDto p : lista) {
 
@@ -138,7 +169,57 @@ public class IscrizioneService {
 																			// sincronizzare ogni record per iscrizione
 
 			classificaRepository.save(c);
+
 		}
+
+		//per nuovo utente
+		
+		//da aggiornare		
+
+
+		ClassificaGlobale classificaGlobale = this.classificaGlobaleRepository.findByIdPlayer(idUtente);
+		log.info("-------- classificaGlobale : "+classificaGlobale);
+		
+		try {
+			
+			
+			if(classificaGlobale == null) {
+				
+				ClassificaGlobale nuovaClassificaGlobale = new ClassificaGlobale();
+				
+				nuovaClassificaGlobale.setIdPlayer(idUtente);
+				nuovaClassificaGlobale.setPunteggioTotale(punteggioUtente);
+				nuovaClassificaGlobale.setMediaPodio(posizioneUtente/1);
+				nuovaClassificaGlobale.setMediaPunteggio(punteggioUtente);
+				nuovaClassificaGlobale.setPartiteGiocate(torneo.getPartite());
+				nuovaClassificaGlobale.setVittorie(podioUtente);
+				nuovaClassificaGlobale.setTorneiGiocati(1);
+				
+				classificaGlobaleRepository.save(nuovaClassificaGlobale);
+				
+				log.info("salvata nuova");
+				
+			}else {
+				
+				classificaGlobale.setPunteggioTotale(classificaGlobale.getPunteggioTotale()+punteggioUtente);
+				classificaGlobale.setPartiteGiocate(classificaGlobale.getPartiteGiocate() + torneo.getPartite());
+				classificaGlobale.setTorneiGiocati(classificaGlobale.getTorneiGiocati()+1);
+				classificaGlobale.setMediaPunteggio((double)(classificaGlobale.getPunteggioTotale()/classificaGlobale.getTorneiGiocati()));
+				classificaGlobale.setMediaPodio(classificaGlobale.getMediaPodio()+posizioneUtente/classificaGlobale.getTorneiGiocati());
+				classificaGlobale.setVittorie(classificaGlobale.getVittorie() + podioUtente);
+				
+				
+				
+				classificaGlobaleRepository.save(classificaGlobale);
+				
+				log.info("aggiornata classificaGlobale");
+
+			}
+			
+		}catch(Exception e) {
+		
+		}
+		
 
 		response.setResult(true);
 		response.setResultTest(true);
