@@ -9,16 +9,16 @@ import lombok.Data;
 public class ClassificaDto {
 	
 	int id;
-	int idIscrizione;
 	int idTorneo;
 	int idUtente;
+	int idIscrizione;
 	int punteggio;
 	int posizione;
 	
-	public static ClassificaDto build(Classifica iscrizione) {
+	public static ClassificaDto build(Classifica classifica) {
 
 		ClassificaDto result = new ClassificaDto();
-		BeanUtils.copyProperties(iscrizione, result);
+		BeanUtils.copyProperties(classifica, result);
 
 		return result;
 	}
