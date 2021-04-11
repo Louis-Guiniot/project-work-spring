@@ -25,6 +25,9 @@ public class TorneoDto {
 	private String premioTerzo;
 	private int idCreatore;
 	private String stato;
+	private String descrizione;
+	private String dataCreazione;
+	private String dataModifica;
 	
 	public static TorneoDto build(Torneo torneo) {
 
