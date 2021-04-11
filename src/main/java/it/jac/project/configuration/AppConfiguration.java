@@ -33,6 +33,8 @@ public class AppConfiguration extends WebSecurityConfigurerAdapter implements We
 		registry.addMapping("/rest/torneo/**").allowedMethods("GET", "POST");
 		registry.addMapping("/rest/classifica/**").allowedMethods("GET", "POST");
 		registry.addMapping("/rest/classificaGlobale/**").allowedMethods("GET", "POST");
+		registry.addMapping("/rest/iscrizione/**").allowedMethods("GET", "POST");
+
 
 
 	}
