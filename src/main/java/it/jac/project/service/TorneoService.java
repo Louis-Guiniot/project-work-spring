@@ -1,6 +1,8 @@
 package it.jac.project.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -20,6 +22,9 @@ import it.jac.project.repository.TorneoRepository;
 public class TorneoService {
 
 	private static Logger log = LoggerFactory.getLogger(TorneoService.class);
+	
+	private static SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss");
+
 
 	@Autowired
 	TorneoRepository torneoRepository;
@@ -43,6 +48,11 @@ public class TorneoService {
 			}
 
 			if (found == false) {
+				
+				Date dataCreazione = new Date(System.currentTimeMillis());
+				String dataFormattata = formatter.format(dataCreazione);
+				
+				torneo.setDataCreazione(dataFormattata);	
 				this.torneoRepository.save(torneo);
 				response.setResult(true);
 				response.setResultTest(true);
@@ -288,14 +298,18 @@ public class TorneoService {
 				if (torneoPassato.getCapienzaMinima() != 0)
 					torneo.setCapienzaMinima(torneoPassato.getCapienzaMinima());
 				
-				if (torneoPassato.getCapienzaMinima() != 0)
-					torneo.setCapienzaMinima(torneoPassato.getCapienzaMinima());
+				if(torneoPassato.getCapienza() != 0 && torneoPassato.getCapienzaMinima() != 0) {
+					
+					int iscrizioniRandom = (int) (Math.random() * (torneo.getCapienza() - torneo.getCapienzaMinima()));
+					log.info("iscrizioni generate "+iscrizioniRandom);
+					torneo.setIscrizioni(iscrizioniRandom);
+					
+					//posti liberi calcolati con capienza - iscrizioni
+					int postiLiberi = torneo.getCapienza() - iscrizioniRandom;
+					log.info("posti liberi "+postiLiberi);
+					torneo.setPostiLiberi(postiLiberi);
+				}
 				
-				if (torneoPassato.getIscrizioni() != 0)
-					torneo.setIscrizioni(torneoPassato.getIscrizioni());
-
-				if (torneoPassato.getIscrizioni() != 0)
-					torneo.setIscrizioni(torneoPassato.getIscrizioni());
 				
 				if (torneoPassato.getQuota() != 0)
 					torneo.setQuota(torneoPassato.getQuota());
@@ -315,6 +329,42 @@ public class TorneoService {
 				if(torneoPassato.getStato() != "")
 					torneo.setStato(torneoPassato.getStato());
 				
+				if(torneoPassato.getDescrizione() != "")
+					torneo.setDescrizione(torneoPassato.getDescrizione());
+				
+				Date dataModifica = new Date(System.currentTimeMillis());
+				String dataFormattata = formatter.format(dataModifica);
+				
+				torneo.setDataModifica(dataFormattata);	
+				
+				this.torneoRepository.save(torneo);
+
+				response.setResult(TorneoDto.build(torneo));
+				response.setResultTest(true);
+
+			}
+
+		} catch (Exception e) {
+
+			response.setError("Nessun elemento trovato.");
+		}
+
+		return response;
+
+	}
+	
+	public ResponseDto<TorneoDto> updateIscrizioniTorneoById(int id, Torneo torneoPassato) {
+
+		ResponseDto<TorneoDto> response = new ResponseDto<TorneoDto>();
+
+		try {
+
+			Torneo torneo = this.torneoRepository.findById(id).get();
+
+			if (torneo != null) {
+
+				torneo.setIscrizioni(torneoPassato.getIscrizioni());
+				torneo.setPostiLiberi(torneoPassato.getPostiLiberi()-1);
 				this.torneoRepository.save(torneo);
 
 				response.setResult(TorneoDto.build(torneo));
