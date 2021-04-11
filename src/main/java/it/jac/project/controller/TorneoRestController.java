@@ -47,7 +47,7 @@ private static Logger log = LoggerFactory.getLogger(TorneoRestController.class);
 	public ResponseDto<?> createTorneo(@RequestBody Torneo torneo){
 
 		log.info("Richiesta di creazione nuovo torneo");
-		log.info("informaizoni passate --------------");
+		log.info("informazioni passate --------------");
 
 		log.info("nome "+torneo.getNome());
 		log.info("gioco "+torneo.getGioco());
@@ -56,7 +56,7 @@ private static Logger log = LoggerFactory.getLogger(TorneoRestController.class);
 		log.info("capienza minima "+torneo.getCapienzaMinima());
 		
 		//iscrizioni generate randomicamente
-		int iscrizioniRandom = (int) (Math.random() * (torneo.getCapienza() - torneo.getCapienzaMinima() + 1));
+		int iscrizioniRandom = (int) (Math.random() * (torneo.getCapienza() - torneo.getCapienzaMinima()));
 		log.info("iscrizioni generate "+iscrizioniRandom);
 		torneo.setIscrizioni(iscrizioniRandom);
 		
@@ -71,7 +71,10 @@ private static Logger log = LoggerFactory.getLogger(TorneoRestController.class);
 		log.info("premio secondo "+torneo.getPremioSecondo());
 		log.info("premio terzo "+torneo.getPremioTerzo());
 		log.info("id creatore "+torneo.getIdCreatore());
-		log.info("stato "+torneo.getStato());
+		
+		torneo.setStato("PRONTO");
+		
+		log.info("descrizione "+torneo.getDescrizione());
 
 		
 
@@ -82,7 +85,7 @@ private static Logger log = LoggerFactory.getLogger(TorneoRestController.class);
 	public ResponseDto<?> aggiornaTorneo(@RequestBody Torneo torneo){
 
 		log.info("Richiesta di aggiornamento torneo");
-		log.info("nuove informaizoni --------------");
+		log.info("nuove informazioni --------------");
 		
 		log.info("nome "+torneo.getNome());
 		log.info("gioco "+torneo.getGioco());
@@ -97,6 +100,7 @@ private static Logger log = LoggerFactory.getLogger(TorneoRestController.class);
 		log.info("2^"+torneo.getPremioSecondo());
 		log.info("3^"+torneo.getPremioTerzo());
 		log.info("stato"+torneo.getStato());
+		log.info("descrizione "+torneo.getDescrizione());
 		
 		int idDapassare = torneo.getId();
 
@@ -111,23 +115,6 @@ private static Logger log = LoggerFactory.getLogger(TorneoRestController.class);
 		log.info("Richiesta delete torneo con id: ",id);
 
 		return torneoService.deleteTorneoById(id);
-	}
-	
-	@PostMapping(path = "/iscriviti")
-	public ResponseDto<?> iscrivitiAlTorneo(@RequestBody Iscrizione iscrizione){
-		
-		log.info("ricevuta richiesta iscrizione");
-		log.info("nuove informaizoni ----------   ");
-
-		
-		log.info("utente " + iscrizione.getIdUtente());
-		log.info("torneo " + iscrizione.getIdTorneo());
-
-		
-		int idUtente = iscrizione.getIdUtente();
-		int idTorneo = iscrizione.getIdTorneo();
-		
-		return iscrizioneService.iscriviti(idTorneo,idUtente);
 	}
 
 }
