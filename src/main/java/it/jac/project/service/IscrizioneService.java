@@ -1,6 +1,8 @@
 package it.jac.project.service;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,6 +28,8 @@ public class IscrizioneService {
 
 	private static Logger log = LoggerFactory.getLogger(IscrizioneService.class);
 
+	private static SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss z");
+	
 	@Autowired
 	IscrizioneRepository iscrizioneRepository;
 
@@ -58,167 +62,18 @@ public class IscrizioneService {
 
 		torneo.setIscrizioni(iscrizioniNuove);
 
-		int punteggioUtente = 0;
-		int punteggioAvversario = 0;
-
-		// lista che contiene tutti i partecipanti
-		List<PartecipanteDto> lista = new ArrayList<>();
-
-		PartecipanteDto me = new PartecipanteDto();
-
-		// genero punteggio totale dell'utente iscritto
-		for (int j = 0; j < torneo.getPartite(); j++) {
-			int p = (int) (Math.random() * (10 - 0)); // genero numero casuale tra 0 e 10
-			punteggioUtente += p;
-		}
-
-		// salvo in iscrizione il mio punteggio
-		iscrizione.setPunteggio(punteggioUtente);
-
-		me.setIdPartecipante(0); // setto 0 come id per ricordarmi quale è il mio / uso anche amI true
-		me.setPunteggioPartecipante(punteggioUtente);
-		me.setAmI(true);
-
-		// creo n partecipanti e faccio for per n partite calcolando il punteggio finale
-		for (int i = 1; i < iscrizioniVecchie; i++) {
-
-			PartecipanteDto ia = new PartecipanteDto();
-			ia.setIdPartecipante(i);
-			ia.setAmI(false);
-
-			for (int j = 0; j < torneo.getPartite(); j++) {
-				punteggioAvversario += (int) (Math.random() * (10 - 0));
-			}
-
-			ia.setPunteggioPartecipante(punteggioAvversario);
-
-			lista.add(ia);
-
-			punteggioAvversario = 0;
-		}
-
-		lista.add(me);
-
-		for (PartecipanteDto u : lista) {
-			log.info("partecipante" + u.toString());
-		}
-
-		PartecipanteDto temp = new PartecipanteDto();
-
-		boolean sorted = false;
-
-		// inizio ciclo for per ordinamento in base al punteggio raggiunto
-		while (!sorted) {
-			sorted = true;
-			for (int i = 0; i < lista.size() - 1; i++) {
-				if (lista.get(i).compareTo(lista.get(i + 1)) == -1) {
-					temp = lista.get(i);
-					lista.set(i, lista.get(i + 1));
-					lista.set(i + 1, temp);
-					sorted = false;
-				}
-			}
-		}
-
-		int posizione = 1;
-		int podioUtente = 0;
-		int posizioneUtente = 0;
 		
-		// mostro in console la lista ordinata
-		log.info("ORDINATA PER PUNTEGGIO ----------------------- \n\n");
-
-		log.info("giocatori totali..." + lista.size());
-
-		for (PartecipanteDto p : lista) {
-
-			// se id partecipante = 0 salvo posizione
-			if (p.getIdPartecipante() == 0) {
-				iscrizione.setPosizione(posizione);
-				
-				posizioneUtente = posizione;
-			
-				// aggiungo vittoria se podio
-				if (posizione == 1 || posizione == 2 || posizione == 3) {
-					podioUtente = 1;
-				}
-			}
-
-			log.info(p.toString());
-			posizione++;
-
-		}
-
 		// aggiorno iscrizioni torneo + posti liberi
-		this.torneoService.updateTorneoById(idTorneo, torneo);
+		this.torneoService.updateIscrizioniTorneoById(idTorneo, torneo);
+		
+		
+		Date dataIscrizione = new Date(System.currentTimeMillis());
+		String dataFormattata = formatter.format(dataIscrizione);
+		
+		iscrizione.setDataIscrizione(dataFormattata);
 
 		// salvo iscrizione con id utente e torneo
 		this.iscrizioneRepository.save(iscrizione);
-
-		// per ogni utente in lista creo record in classifica con informazioni :
-		// ID: iscrizione , ID torneo, ID utente, Punteggio
-		for (PartecipanteDto p : lista) {
-
-			// creo nuovo record classifica
-			Classifica c = new Classifica();
-
-			c.setIdTorneo(idTorneo);
-			c.setIdUtente(p.getIdPartecipante());
-			c.setPunteggio(p.getPunteggioPartecipante());
-
-			c.setIdIscrizione(findLastIscrizione().getResult().getId()); // ricevo l'ultima iscrizione fatta, così
-																			// sincronizzare ogni record per iscrizione
-
-			classificaRepository.save(c);
-
-		}
-
-		//per nuovo utente
-		
-		//da aggiornare		
-
-
-		ClassificaGlobale classificaGlobale = this.classificaGlobaleRepository.findByIdPlayer(idUtente);
-		log.info("-------- classificaGlobale : "+classificaGlobale);
-		
-		try {
-			
-			
-			if(classificaGlobale == null) {
-				
-				ClassificaGlobale nuovaClassificaGlobale = new ClassificaGlobale();
-				
-				nuovaClassificaGlobale.setIdPlayer(idUtente);
-				nuovaClassificaGlobale.setPunteggioTotale(punteggioUtente);
-				nuovaClassificaGlobale.setMediaPodio(posizioneUtente/1);
-				nuovaClassificaGlobale.setMediaPunteggio(punteggioUtente);
-				nuovaClassificaGlobale.setPartiteGiocate(torneo.getPartite());
-				nuovaClassificaGlobale.setVittorie(podioUtente);
-				nuovaClassificaGlobale.setTorneiGiocati(1);
-				
-				classificaGlobaleRepository.save(nuovaClassificaGlobale);
-				
-				log.info("salvata nuova");
-				
-			}else {
-				
-				classificaGlobale.setPunteggioTotale(classificaGlobale.getPunteggioTotale()+punteggioUtente);
-				classificaGlobale.setPartiteGiocate(classificaGlobale.getPartiteGiocate() + torneo.getPartite());
-				classificaGlobale.setTorneiGiocati(classificaGlobale.getTorneiGiocati()+1);
-				classificaGlobale.setMediaPunteggio((double)(classificaGlobale.getPunteggioTotale()/classificaGlobale.getTorneiGiocati()));
-				classificaGlobale.setMediaPodio(classificaGlobale.getMediaPodio()+posizioneUtente/classificaGlobale.getTorneiGiocati());
-				classificaGlobale.setVittorie(classificaGlobale.getVittorie() + podioUtente);
-				
-				
-				
-				classificaGlobaleRepository.save(classificaGlobale);
-				
-				log.info("aggiornata classificaGlobale");
-
-			}
-			
-		}catch(Exception e) {
-		
-		}
 		
 
 		response.setResult(true);
