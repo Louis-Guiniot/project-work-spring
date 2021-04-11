@@ -33,20 +33,25 @@ public class UtenteService {
 			Iterator<Utente> iterator = this.utenteRepository.findAll().iterator();
 			
 			String emailDaComparare = utente.getEmail();
-			String usernameDaComparare = utente.getUsername();
+			String usernameDaComparare = utente.getUsername().toLowerCase();
+			log.info(usernameDaComparare);
+			log.info(emailDaComparare);
 
 
 			while (iterator.hasNext()) {
 
 				Utente u = iterator.next();
-				if (  (u.getEmail().equals(emailDaComparare))|| (u.getUsername().equals(usernameDaComparare)) ) {
+				
+				if (u.getEmail().equals(emailDaComparare) || u.getUsername().toLowerCase().equals(usernameDaComparare)) {
 					found = true;
 					log.info("utente già presente con tali informazioni");
 				}
 
 			}
 
-			if (found == false) {
+			if (!found) {
+				
+				log.info("utente creato");
 				this.utenteRepository.save(utente);
 				response.setResult(true);
 				response.setResultTest(true);
@@ -150,8 +155,15 @@ public class UtenteService {
 		try {
 
 			Utente utente = this.utenteRepository.findByUsernameAndPassword(username, password);
-
-			if (utente != null) {
+			
+			if (
+					utente != null && 
+					null != utente.getPassword() &&
+					null != utente.getUsername() && 
+					utente.getUsername().equals(username) &&
+					utente.getPassword().equals(password)
+					
+			) {
 
 				log.info("utente trovato.");
 
