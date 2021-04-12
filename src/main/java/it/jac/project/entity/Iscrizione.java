@@ -7,6 +7,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import lombok.Data;
+
+@Data
 @Entity
 @Table(name = "iscrizione_torneo") 	
 public class Iscrizione {
@@ -21,31 +24,8 @@ public class Iscrizione {
 	
 	@Column(name = "idUtente")
 	private int idUtente;
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public int getIdUtente() {
-		return idUtente;
-	}
-
-	public void setIdUtente(int idUtente) {
-		this.idUtente = idUtente;
-	}
-
-	public int getIdTorneo() {
-		return idTorneo;
-	}
-
-	public void setIdTorneo(int idTorneo) {
-		this.idTorneo = idTorneo;
-	}
 	
+	@Column(name = "data_iscrizione")
+	private String dataIscrizione;
 	
-
 }

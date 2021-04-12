@@ -3,7 +3,9 @@ package it.jac.project.dto;
 import org.springframework.beans.BeanUtils;
 
 import it.jac.project.entity.Iscrizione;
+import lombok.Data;
 
+@Data
 public class IscrizioneDto {
 
 	private int id;
@@ -11,6 +13,8 @@ public class IscrizioneDto {
 	private int idUtente;
 
 	private int idTorneo;
+	
+	private String dataIscrizione;
 	
 	public static IscrizioneDto build(Iscrizione iscrizione) {
 
@@ -20,28 +24,5 @@ public class IscrizioneDto {
 		return result;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public int getIdUtente() {
-		return idUtente;
-	}
-
-	public void setIdUtente(int idUtente) {
-		this.idUtente = idUtente;
-	}
-
-	public int getIdTorneo() {
-		return idTorneo;
-	}
-
-	public void setIdTorneo(int idTorneo) {
-		this.idTorneo = idTorneo;
-	}
 	
 }
