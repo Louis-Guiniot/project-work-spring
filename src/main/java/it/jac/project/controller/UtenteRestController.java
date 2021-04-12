@@ -60,7 +60,7 @@ public class UtenteRestController {
 		log.info("password "+utente.getPassword());
 		log.info("nome "+utente.getNome());
 		log.info("cognome "+utente.getCognome());
-		log.info("data nascita "+utente.getDatanascita());
+		log.info("genere "+utente.getGenere());
 		log.info("email "+utente.getEmail());
 		
 		int idDapassare = utente.getId();
