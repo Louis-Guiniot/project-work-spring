@@ -365,6 +365,13 @@ public class TorneoService {
 
 				torneo.setIscrizioni(torneoPassato.getIscrizioni());
 				torneo.setPostiLiberi(torneoPassato.getPostiLiberi()-1);
+				
+				if(torneo.getPostiLiberi() == 0) {
+					torneo.setStato("CONCLUSO");
+				}else {
+					torneo.setStato("IN CORSO");
+				}
+				
 				this.torneoRepository.save(torneo);
 
 				response.setResult(TorneoDto.build(torneo));
