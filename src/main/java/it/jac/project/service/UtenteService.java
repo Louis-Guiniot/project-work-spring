@@ -210,8 +210,8 @@ public class UtenteService {
 				if (utentePassato.getEmail() != "")
 					utente.setEmail(utentePassato.getEmail());
 
-				if (utentePassato.getDatanascita() != "")
-					utente.setDatanascita(utentePassato.getDatanascita());
+				if (utentePassato.getGenere() != "")
+					utente.setGenere(utentePassato.getGenere());
 
 
 				this.utenteRepository.save(utente);
